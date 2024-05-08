@@ -34,7 +34,7 @@ export class UnitService {
             throw new ResponseError(400, "Initial already exists");
         }
         
-        unitRequest.created_at = Helper.dateLocal(new Date());
+        unitRequest.created_at = Helper.dateTimeLocal(new Date());
         unitRequest.created_by = user.username;
         
         const result = await prismaClient.unit.create({ 
@@ -76,7 +76,7 @@ export class UnitService {
 
         const unit = {
             ...updateRequest, // Copy other fields from the original request
-            updated_at : Helper.dateLocal(new Date()),
+            updated_at : Helper.dateTimeLocal(new Date()),
             updated_by : user.username,
         };
         logger.info('==== param unit update ====')

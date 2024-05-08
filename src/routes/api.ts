@@ -3,6 +3,7 @@ import { authMiddleware } from "../middleware/auth-middleware"
 import { UserControler } from "../controller/user-controller"
 import { UnitController } from "../controller/unit-controller"
 import { CategoryController } from "../controller/category-controller"
+import { BrandController } from "../controller/brand-controller"
 export const apiRouter = express.Router()
 
 apiRouter.use(authMiddleware)
@@ -27,8 +28,8 @@ apiRouter.get(process.env.GET_CATEGORY_PATH!, CategoryController.getById);
 apiRouter.delete(process.env.DELETE_CATEGORY_PATH!, CategoryController.delete);
 
 // API BRANDS ROUTE //
-apiRouter.get(process.env.GET_ALL_BRAND_PATH!, CategoryController.get);
-apiRouter.post(process.env.CREATE_BRAND_PATH!, CategoryController.create);
-apiRouter.patch(process.env.UPDATE_BRAND_PATH!, CategoryController.update);
-apiRouter.get(process.env.GET_BRAND_PATH!, CategoryController.getById);
-apiRouter.delete(process.env.DELETE_BRAND_PATH!, CategoryController.delete);
+apiRouter.get(process.env.GET_ALL_BRAND_PATH!, BrandController.get);
+apiRouter.post(process.env.CREATE_BRAND_PATH!, BrandController.create);
+apiRouter.patch(process.env.UPDATE_BRAND_PATH!, BrandController.update);
+apiRouter.get(process.env.GET_BRAND_PATH!, BrandController.getById);
+apiRouter.delete(process.env.DELETE_BRAND_PATH!, BrandController.delete);

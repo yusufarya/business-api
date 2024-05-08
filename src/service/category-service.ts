@@ -30,7 +30,7 @@ export class CategoryService {
             throw new ResponseError(400, "Category name already exists");
         }
         
-        categoryRequest.created_at = Helper.dateLocal(new Date());
+        categoryRequest.created_at = Helper.dateTimeLocal(new Date());
         categoryRequest.created_by = user.username;
         logger.info(categoryRequest)
         const result = await prismaClient.category.create({ 
@@ -71,7 +71,7 @@ export class CategoryService {
 
         const category = {
             ...updateRequest, // Copy other fields from the original request
-            updated_at : Helper.dateLocal(new Date()),
+            updated_at : Helper.dateTimeLocal(new Date()),
             updated_by : user.username,
         };
         logger.info('==== param category update ====')

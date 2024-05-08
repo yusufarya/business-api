@@ -72,7 +72,7 @@ export class UserService {
       throw new ResponseError(400, EXIST_USERNAME!);
     }
 
-    registerRequest.created_at = Helper.dateLocal(new Date());
+    registerRequest.created_at = Helper.dateTimeLocal(new Date());
     registerRequest.created_by = "self register";
     registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
     const user = await prismaClient.user.create({ 
@@ -109,7 +109,7 @@ export class UserService {
       },
       data: {
         token: uuid(),
-        last_login: Helper.dateLocal(new Date()),
+        last_login: Helper.dateTimeLocal(new Date()),
       },
     });
 
@@ -165,7 +165,7 @@ export class UserService {
       user.level = updateRequest.level;
     }
 
-    user.updated_at = Helper.dateLocal(new Date());
+    user.updated_at = Helper.dateTimeLocal(new Date());
     user.updated_by = "self update";
 
     const result = await prismaClient.user.update({

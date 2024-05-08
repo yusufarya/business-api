@@ -1,5 +1,5 @@
 export class Helper {
-    static dateLocal(date : Date) {
+    static dateTimeLocal(date : Date) {
         const utcTime = date.getTime();
 
         // Jakarta time zone offset in milliseconds (7 hours ahead of UTC)

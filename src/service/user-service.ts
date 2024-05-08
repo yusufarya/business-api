@@ -16,6 +16,7 @@ import { logger } from "../app/logging";
 import { string } from "zod";
 import { User } from "@prisma/client";
 import { Request } from "express";
+import { Helper } from "../utils/helper";
 
 env.config();
 
@@ -71,7 +72,7 @@ export class UserService {
       throw new ResponseError(400, EXIST_USERNAME!);
     }
 
-    registerRequest.created_at = new Date();
+    registerRequest.created_at = Helper.dateLocal(new Date());
     registerRequest.created_by = "self register";
     registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
     const user = await prismaClient.user.create({ 

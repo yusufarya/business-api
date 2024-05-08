@@ -5,6 +5,7 @@ import { Validation } from "../validation/validation";
 import { CategoryValidation } from "../validation/category-validation";
 import { logger } from "../app/logging";
 import { ResponseError } from "../error/response-error";
+import { Helper } from "../utils/helper";
 
 export class CategoryService {
     static async getAllData(): Promise<Category[]> {
@@ -29,7 +30,7 @@ export class CategoryService {
             throw new ResponseError(400, "Category name already exists");
         }
         
-        categoryRequest.created_at = new Date();
+        categoryRequest.created_at = Helper.dateLocal(new Date());
         categoryRequest.created_by = user.username;
         
         const result = await prismaClient.category.create({ 

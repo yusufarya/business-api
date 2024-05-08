@@ -5,6 +5,7 @@ import { Validation } from "../validation/validation";
 import { UnitValidation } from "../validation/unit-validation";
 import { logger } from "../app/logging";
 import { ResponseError } from "../error/response-error";
+import { Helper } from "../utils/helper";
 
 export class UnitService {
     static async getAllData(): Promise<Unit[]> {
@@ -33,7 +34,7 @@ export class UnitService {
             throw new ResponseError(400, "Initial already exists");
         }
         
-        unitRequest.created_at = new Date();
+        unitRequest.created_at = Helper.dateLocal(new Date());
         unitRequest.created_by = user.username;
         
         const result = await prismaClient.unit.create({ 

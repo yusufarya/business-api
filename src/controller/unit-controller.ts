@@ -23,11 +23,9 @@ export class UnitController {
     static async create(req: Request, res: Response, next: NextFunction) {
         try {
             const request: CreateUnitRequest = req.body as CreateUnitRequest;
-            logger.info('======== CreateUnitRequest ========')
-            logger.info(request)
             const response = await UnitService.store(request, req.body);
             res.status(200).json({
-                data: response
+                data: process.env.SUCCESS_ADD_DATA
             })
         } catch (error) {
             next(error)
@@ -39,7 +37,9 @@ export class UnitController {
         try {
             const request: UpdateUnitRequest = req.body as UpdateUnitRequest;
             const response = await UnitService.update(request, req.body);
-            res.status(200).json({ data: response });
+            res.status(200).json({ 
+                data: process.env.SUCCESS_UPDATE_DATA
+            });
         } catch (error) {
             next(error);
         }

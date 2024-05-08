@@ -26,7 +26,7 @@ export class CategoryService {
         })
 
         if(existName > 0) {
-            throw new ResponseError(400, "Name already exists");
+            throw new ResponseError(400, "Category name already exists");
         }
         
         categoryRequest.created_at = new Date();

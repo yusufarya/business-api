@@ -57,7 +57,7 @@ export class UnitService {
             })
     
             if(existdata == 0) {
-                throw new ResponseError(400, "Data not found.");
+                throw new ResponseError(404, "Data not found.");
             }
         }
         
@@ -69,7 +69,7 @@ export class UnitService {
             })
     
             if(existInitial > 0) {
-                throw new ResponseError(400, "Initial already exists");
+                throw new ResponseError(404, "Initial already exists");
             }
         }
 

@@ -33,14 +33,14 @@ export type ByIdRequest = {
     id: number
 }
 
-export function toCategoryResponse(unit: Category): CategoryResponse {
+export function toCategoryResponse(category: Category): CategoryResponse {
     return {
-        id: unit.id,
-        name: unit.name,
-        description: unit.description ?? null,
-        created_at: unit.created_at,
-        created_by: unit.created_by ?? null,
-        updated_at: unit.updated_at,
-        updated_by: unit.updated_by ?? null
+        id: category.id,
+        name: category.name,
+        description: category.description ?? null,
+        created_at: category.created_at,
+        created_by: category.created_by ?? null,
+        updated_at: category.updated_at,
+        updated_by: category.updated_by ?? null
     };
 }

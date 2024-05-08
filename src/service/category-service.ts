@@ -32,7 +32,7 @@ export class CategoryService {
         
         categoryRequest.created_at = Helper.dateLocal(new Date());
         categoryRequest.created_by = user.username;
-        
+        logger.info(categoryRequest)
         const result = await prismaClient.category.create({ 
             data: categoryRequest 
         });
@@ -72,7 +72,7 @@ export class CategoryService {
 
         const category = {
             ...updateRequest, // Copy other fields from the original request
-            updated_at : new Date(),
+            updated_at : Helper.dateLocal(new Date()),
             updated_by : user.username,
         };
         logger.info('==== param category update ====')

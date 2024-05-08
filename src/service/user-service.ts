@@ -109,7 +109,7 @@ export class UserService {
       },
       data: {
         token: uuid(),
-        last_login: new Date,
+        last_login: Helper.dateLocal(new Date()),
       },
     });
 
@@ -165,7 +165,7 @@ export class UserService {
       user.level = updateRequest.level;
     }
 
-    user.updated_at = new Date();
+    user.updated_at = Helper.dateLocal(new Date());
     user.updated_by = "self update";
 
     const result = await prismaClient.user.update({

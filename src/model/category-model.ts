@@ -1,7 +1,5 @@
 import { Category } from "@prisma/client";
 
-export type IsActive = "Y" | "N";
-
 export type CategoryResponse = {
     id: number,
     name: string,
@@ -25,7 +23,6 @@ export type UpdateCategoryRequest = {
     id: number,
     name?: string,
     description?: string,
-    is_active: IsActive,
     created_at?: Date,
     created_by?: string,
     updated_at?: Date,

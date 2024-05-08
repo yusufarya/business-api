@@ -45,7 +45,6 @@ export class CategoryService {
         const updateRequest = Validation.validate(CategoryValidation.UPDATE, request)
         
         logger.info("===== Update category data =====")
-        logger.info(updateRequest)
         if(updateRequest.id) {
             const existdata = await prismaClient.category.count({
                 where:{
@@ -54,7 +53,7 @@ export class CategoryService {
             })
     
             if(existdata == 0) {
-                throw new ResponseError(400, "Data not found.");
+                throw new ResponseError(404, "Data not found.");
             }
         }
         
@@ -119,7 +118,7 @@ export class CategoryService {
             return existdata
     
         } else {
-            throw new ResponseError(400, "Data not found.");
+            throw new ResponseError(404, "Data not found.");
         }
     }
 }

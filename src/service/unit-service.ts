@@ -101,13 +101,13 @@ export class UnitService {
             })
 
             if(existdata == null) {
-                throw new ResponseError(400, "Data not found.");
+                throw new ResponseError(404, "Data not found.");
             }
 
             return existdata
     
         } else {
-            throw new ResponseError(400, "Data not found.");
+            throw new ResponseError(404, "Data not found.");
         }
     }
 
@@ -123,7 +123,7 @@ export class UnitService {
             return existdata
     
         } else {
-            throw new ResponseError(400, "Data not found.");
+            throw new ResponseError(404, "Data not found.");
         }
     }
 }

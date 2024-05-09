@@ -1,3 +1,4 @@
+import env from "dotenv";
 import { Category, User } from "@prisma/client";
 import { CreateCategoryRequest, ByIdRequest, CategoryResponse, UpdateCategoryRequest, toCategoryResponse } from "../model/category-model";
 import { prismaClient } from "../app/database";
@@ -6,6 +7,10 @@ import { CategoryValidation } from "../validation/category-validation";
 import { logger } from "../app/logging";
 import { ResponseError } from "../error/response-error";
 import { Helper } from "../utils/helper";
+
+env.config();
+
+const DATA_NOT_FOUND = process.env.DATA_NOT_FOUND;
 
 export class CategoryService {
     static async getAllData(): Promise<Category[]> {
@@ -53,7 +58,7 @@ export class CategoryService {
             })
     
             if(existdata == 0) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
         }
         
@@ -96,29 +101,39 @@ export class CategoryService {
             })
 
             if(existdata == null) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
 
             return existdata
     
         } else {
-            throw new ResponseError(404, "Data not found.");
+            throw new ResponseError(404, DATA_NOT_FOUND!);
         }
     }
 
     static async delete(request: ByIdRequest): Promise<CategoryResponse | null> {
         logger.info("===== Delete category by id =====")
         if(request.id) {
-            const existdata = await prismaClient.category.delete({
+            const existdata = await prismaClient.category.count({
                 where:{
                     id: request.id
                 }
             })
 
-            return existdata
+            if(existdata == 0) {
+                throw new ResponseError(404, DATA_NOT_FOUND!);
+            }
+
+            const result = await prismaClient.category.delete({
+                where:{
+                    id: request.id
+                }
+            })
+
+            return result
     
         } else {
-            throw new ResponseError(404, "Data not found.");
+            throw new ResponseError(404, DATA_NOT_FOUND!);
         }
     }
 }

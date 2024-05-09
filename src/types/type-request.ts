@@ -1,4 +1,4 @@
-import { Brand, Category, Unit, User } from "@prisma/client";
+import { Branch, Brand, Category, Unit, User } from "@prisma/client";
 import { Request } from "express";
 
 export interface UserRequest extends Request {
@@ -12,4 +12,7 @@ export interface CategoryRequest extends Request {
 }
 export interface BrandRequest extends Request {
   brand?: Brand;
+}
+export interface BranchRequest extends Request {
+  branch?: Branch;
 }

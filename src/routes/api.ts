@@ -5,6 +5,7 @@ import { UnitController } from "../controller/unit-controller"
 import { CategoryController } from "../controller/category-controller"
 import { BrandController } from "../controller/brand-controller"
 import { BranchController } from "../controller/branch-controller"
+import { WarehouseController } from "../controller/warehouse-controller"
 export const apiRouter = express.Router()
 
 apiRouter.use(authMiddleware)
@@ -41,3 +42,10 @@ apiRouter.post(process.env.CREATE_BRANCH_PATH!, BranchController.create);
 apiRouter.patch(process.env.UPDATE_BRANCH_PATH!, BranchController.update);
 apiRouter.get(process.env.GET_BRANCH_PATH!, BranchController.getById);
 apiRouter.delete(process.env.DELETE_BRANCH_PATH!, BranchController.delete);
+
+// API WAREHOUSES ROUTE //
+apiRouter.get(process.env.GET_ALL_WAREHOUSE_PATH!, WarehouseController.get);
+apiRouter.post(process.env.CREATE_WAREHOUSE_PATH!, WarehouseController.create);
+apiRouter.patch(process.env.UPDATE_WAREHOUSE_PATH!, WarehouseController.update);
+apiRouter.get(process.env.GET_WAREHOUSE_PATH!, WarehouseController.getById);
+apiRouter.delete(process.env.DELETE_WAREHOUSE_PATH!, WarehouseController.delete);

@@ -110,13 +110,23 @@ export class BrandService {
     static async delete(request: ByIdRequest): Promise<BrandResponse | null> {
         logger.info("===== Delete brand by id =====")
         if(request.id) {
-            const existdata = await prismaClient.brand.delete({
+            const existdata = await prismaClient.brand.count({
                 where:{
                     id: request.id
                 }
             })
 
-            return existdata
+            if(existdata == 0) {
+                throw new ResponseError(404, "Data not found.");
+            }
+
+            const result = await prismaClient.brand.delete({
+                where:{
+                    id: request.id
+                }
+            })
+
+            return result
     
         } else {
             throw new ResponseError(404, "Data not found.");

@@ -19,3 +19,6 @@ export interface BranchRequest extends Request {
 export interface WarehouseRequest extends Request {
   warehouse?: WarehouseRequest;
 }
+export interface ProductRequest extends Request {
+  product?: ProductRequest;
+}

@@ -123,6 +123,16 @@ export class CategoryService {
             if(existdata == 0) {
                 throw new ResponseError(404, DATA_NOT_FOUND!);
             }
+            
+            const checkThisCategoryUsed = await prismaClient.product.findFirst({
+                where:{
+                    category_id: request.id
+                }
+            })
+            
+            if(checkThisCategoryUsed) {
+                throw new ResponseError(400, "This category used on product '" + checkThisCategoryUsed.name + "'");
+            }
 
             const result = await prismaClient.category.delete({
                 where:{

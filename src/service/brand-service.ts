@@ -125,6 +125,16 @@ export class BrandService {
                 throw new ResponseError(404, DATA_NOT_FOUND!);
             }
 
+            const checkThisBrandUsed = await prismaClient.product.findFirst({
+                where:{
+                    brand_id: request.id
+                }
+            })
+            
+            if(checkThisBrandUsed) {
+                throw new ResponseError(400, "This brand used on product '" + checkThisBrandUsed.name + "'");
+            }
+
             const result = await prismaClient.brand.delete({
                 where:{
                     id: request.id

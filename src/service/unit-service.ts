@@ -119,13 +119,34 @@ export class UnitService {
     static async delete(request: ByIdRequest): Promise<UnitResponse | null> {
         logger.info("===== Delete unit by id =====")
         if(request.id) {
-            const existdata = await prismaClient.unit.delete({
+
+            const existdata = await prismaClient.unit.count({
                 where:{
                     id: request.id
                 }
             })
 
-            return existdata
+            if(existdata == 0) {
+                throw new ResponseError(404, DATA_NOT_FOUND!);
+            }
+
+            const checkThisUnitUsed = await prismaClient.product.findFirst({
+                where:{
+                    unit_id: request.id
+                }
+            })
+            
+            if(checkThisUnitUsed) {
+                throw new ResponseError(400, "This unit used on product '" + checkThisUnitUsed.name + "'");
+            }
+            
+            const result = await prismaClient.unit.delete({
+                where:{
+                    id: request.id
+                }
+            })
+
+            return result
     
         } else {
             throw new ResponseError(404, DATA_NOT_FOUND!);

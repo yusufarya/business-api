@@ -117,6 +117,16 @@ export class BranchService {
         logger.info(request.id)
         if(request.id) {
 
+            const checkThisBranchUsed = await prismaClient.warehouse.findFirst({
+                where:{
+                    branch_id: request.id
+                }
+            })
+            
+            if(checkThisBranchUsed) {
+                throw new ResponseError(400, "This branch used on " + checkThisBranchUsed.name);
+            }
+
             const existdata = await prismaClient.branch.count({
                 where:{
                     id: request.id

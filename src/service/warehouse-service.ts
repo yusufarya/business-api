@@ -16,7 +16,11 @@ export class WarehouseService {
     static async getAllData(): Promise<Warehouse[]> {
         const result = await prismaClient.warehouse.findMany({
             include: {
-                branch: true
+                branch: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         })
 
@@ -104,6 +108,13 @@ export class WarehouseService {
             const existdata = await prismaClient.warehouse.findFirst({
                 where:{
                     id: request.id
+                },
+                include: {
+                    branch: {
+                        select: {
+                            name: true
+                        }
+                    }
                 }
             })
 

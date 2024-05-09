@@ -1,3 +1,4 @@
+import env from "dotenv";
 import { Brand, User } from "@prisma/client";
 import { CreateBrandRequest, ByIdRequest, BrandResponse, UpdateBrandRequest, toBrandResponse } from "../model/brand-model";
 import { prismaClient } from "../app/database";
@@ -6,6 +7,10 @@ import { BrandValidation } from "../validation/brand-validation";
 import { logger } from "../app/logging";
 import { ResponseError } from "../error/response-error";
 import { Helper } from "../utils/helper";
+
+env.config();
+
+const DATA_NOT_FOUND = process.env.DATA_NOT_FOUND;
 
 export class BrandService {
     static async getAllData(): Promise<Brand[]> {
@@ -54,7 +59,7 @@ export class BrandService {
             })
     
             if(existdata == 0) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
         }
         
@@ -97,13 +102,13 @@ export class BrandService {
             })
 
             if(existdata == null) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
 
             return existdata
     
         } else {
-            throw new ResponseError(404, "Data not found.");
+            throw new ResponseError(404, DATA_NOT_FOUND!);
         }
     }
 
@@ -117,7 +122,7 @@ export class BrandService {
             })
 
             if(existdata == 0) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
 
             const result = await prismaClient.brand.delete({
@@ -129,7 +134,7 @@ export class BrandService {
             return result
     
         } else {
-            throw new ResponseError(404, "Data not found.");
+            throw new ResponseError(404, DATA_NOT_FOUND!);
         }
     }
 }

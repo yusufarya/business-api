@@ -1,3 +1,4 @@
+import env from "dotenv";
 import { Unit, User } from "@prisma/client";
 import { CreateUnitRequest, ByIdRequest, UnitResponse, UpdateUnitRequest, toUnitResponse } from "../model/unit-model";
 import { prismaClient } from "../app/database";
@@ -6,6 +7,10 @@ import { UnitValidation } from "../validation/unit-validation";
 import { logger } from "../app/logging";
 import { ResponseError } from "../error/response-error";
 import { Helper } from "../utils/helper";
+
+env.config();
+
+const DATA_NOT_FOUND = process.env.DATA_NOT_FOUND;
 
 export class UnitService {
     static async getAllData(): Promise<Unit[]> {
@@ -58,7 +63,7 @@ export class UnitService {
             })
     
             if(existdata == 0) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
         }
         
@@ -70,7 +75,7 @@ export class UnitService {
             })
     
             if(existInitial > 0) {
-                throw new ResponseError(404, "Initial already exists");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
         }
 
@@ -101,13 +106,13 @@ export class UnitService {
             })
 
             if(existdata == null) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
 
             return existdata
     
         } else {
-            throw new ResponseError(404, "Data not found.");
+            throw new ResponseError(404, DATA_NOT_FOUND!);
         }
     }
 
@@ -123,7 +128,7 @@ export class UnitService {
             return existdata
     
         } else {
-            throw new ResponseError(404, "Data not found.");
+            throw new ResponseError(404, DATA_NOT_FOUND!);
         }
     }
 }

@@ -1,3 +1,4 @@
+import env from "dotenv";
 import { Branch, User } from "@prisma/client";
 import { CreateBranchRequest, ByIdRequest, BranchResponse, UpdateBranchRequest, toBranchResponse } from "../model/branch-model";
 import { prismaClient } from "../app/database";
@@ -6,6 +7,10 @@ import { BranchValidation } from "../validation/branch-validation";
 import { logger } from "../app/logging";
 import { ResponseError } from "../error/response-error";
 import { Helper } from "../utils/helper";
+
+env.config();
+
+const DATA_NOT_FOUND = process.env.DATA_NOT_FOUND;
 
 export class BranchService {
     static async getAllData(): Promise<Branch[]> {
@@ -54,7 +59,7 @@ export class BranchService {
             })
     
             if(existdata == 0) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
         }
         
@@ -97,13 +102,13 @@ export class BranchService {
             })
 
             if(existdata == null) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
 
             return existdata
     
         } else {
-            throw new ResponseError(404, "Data not found.");
+            throw new ResponseError(404, DATA_NOT_FOUND!);
         }
     }
 
@@ -119,7 +124,7 @@ export class BranchService {
             })
 
             if(existdata == 0) {
-                throw new ResponseError(404, "Data not found.");
+                throw new ResponseError(404, DATA_NOT_FOUND!);
             }
 
             const result = await prismaClient.branch.delete({
@@ -131,7 +136,7 @@ export class BranchService {
             return result
     
         } else {
-            throw new ResponseError(404, "Data not found.");
+            throw new ResponseError(404, DATA_NOT_FOUND!);
         }
     }
 }

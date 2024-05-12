@@ -1,6 +1,6 @@
 import env from "dotenv";
 import express from "express";
-import { UserControler } from "../controller/user-controller";
+import { UserControler } from "../controller/master/user-controller";
 import { logger } from "../app/logging";
 env.config();
 logger.info("=========================== PUBLIC ROUTER ===========================");

@@ -22,3 +22,9 @@ export interface WarehouseRequest extends Request {
 export interface ProductRequest extends Request {
   product?: ProductRequest;
 }
+export interface StockAdjustmentRequest extends Request {
+  stockAdjustment?: StockAdjustmentRequest;
+}
+export interface StockAdjustmentDetailRequest extends Request {
+  stockAdjustmentDetail?: StockAdjustmentDetailRequest;
+}

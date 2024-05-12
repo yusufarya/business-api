@@ -1,12 +1,14 @@
 import express from "express"
 import { authMiddleware } from "../middleware/auth-middleware"
-import { UserControler } from "../controller/user-controller"
-import { UnitController } from "../controller/unit-controller"
-import { CategoryController } from "../controller/category-controller"
-import { BrandController } from "../controller/brand-controller"
-import { BranchController } from "../controller/branch-controller"
-import { WarehouseController } from "../controller/warehouse-controller"
-import { ProductController } from "../controller/product-controller"
+import { UserControler } from "../controller/master/user-controller"
+import { UnitController } from "../controller/master/unit-controller"
+import { CategoryController } from "../controller/master/category-controller"
+import { BrandController } from "../controller/master/brand-controller"
+import { BranchController } from "../controller/master/branch-controller"
+import { WarehouseController } from "../controller/master/warehouse-controller"
+import { ProductController } from "../controller/master/product-controller"
+import { StockAdjustmentController } from "../controller/transaction/stockadjustment-controller"
+import { StockAdjustmentDetailController } from "../controller/transaction/stockadjustmentdetail-controller"
 export const apiRouter = express.Router()
 
 apiRouter.use(authMiddleware)
@@ -16,44 +18,57 @@ apiRouter.get(process.env.GET_USER_CURRENT_PATH!, UserControler.get);
 apiRouter.patch(process.env.UPDATE_USER_CURRENT_PATH!, UserControler.update);
 apiRouter.delete(process.env.LOGOUT_USER_PATH!, UserControler.logout);
 
-// API CATEGORIES ROUTE //
+// API MASTER CATEGORIES ROUTE //
 apiRouter.get(process.env.GET_ALL_CATEGORY_PATH!, CategoryController.get);
 apiRouter.post(process.env.CREATE_CATEGORY_PATH!, CategoryController.create);
 apiRouter.patch(process.env.UPDATE_CATEGORY_PATH!, CategoryController.update);
 apiRouter.get(process.env.GET_CATEGORY_PATH!, CategoryController.getById);
 apiRouter.delete(process.env.DELETE_CATEGORY_PATH!, CategoryController.delete);
 
-// API UNITS ROUTE //
+// API MASTER UNITS ROUTE //
 apiRouter.get(process.env.GET_ALL_UNIT_PATH!, UnitController.get);
 apiRouter.post(process.env.CREATE_UNIT_PATH!, UnitController.create);
 apiRouter.patch(process.env.UPDATE_UNIT_PATH!, UnitController.update);
 apiRouter.get(process.env.GET_UNIT_PATH!, UnitController.getById);
 apiRouter.delete(process.env.DELETE_UNIT_PATH!, UnitController.delete);
 
-// API BRANDS ROUTE //
+// API MASTER BRANDS ROUTE //
 apiRouter.get(process.env.GET_ALL_BRAND_PATH!, BrandController.get);
 apiRouter.post(process.env.CREATE_BRAND_PATH!, BrandController.create);
 apiRouter.patch(process.env.UPDATE_BRAND_PATH!, BrandController.update);
 apiRouter.get(process.env.GET_BRAND_PATH!, BrandController.getById);
 apiRouter.delete(process.env.DELETE_BRAND_PATH!, BrandController.delete);
 
-// API BRANCH ROUTE //
+// API MASTER BRANCH ROUTE //
 apiRouter.get(process.env.GET_ALL_BRANCH_PATH!, BranchController.get);
 apiRouter.post(process.env.CREATE_BRANCH_PATH!, BranchController.create);
 apiRouter.patch(process.env.UPDATE_BRANCH_PATH!, BranchController.update);
 apiRouter.get(process.env.GET_BRANCH_PATH!, BranchController.getById);
 apiRouter.delete(process.env.DELETE_BRANCH_PATH!, BranchController.delete);
 
-// API WAREHOUSES ROUTE //
+// API MASTER WAREHOUSES ROUTE //
 apiRouter.get(process.env.GET_ALL_WAREHOUSE_PATH!, WarehouseController.get);
 apiRouter.post(process.env.CREATE_WAREHOUSE_PATH!, WarehouseController.create);
 apiRouter.patch(process.env.UPDATE_WAREHOUSE_PATH!, WarehouseController.update);
 apiRouter.get(process.env.GET_WAREHOUSE_PATH!, WarehouseController.getById);
 apiRouter.delete(process.env.DELETE_WAREHOUSE_PATH!, WarehouseController.delete);
 
-// API PRODUCTS ROUTE //
+// API MASTER PRODUCTS ROUTE //
 apiRouter.get(process.env.GET_ALL_PRODUCT_PATH!, ProductController.get);
 apiRouter.post(process.env.CREATE_PRODUCT_PATH!, ProductController.create);
 apiRouter.patch(process.env.UPDATE_PRODUCT_PATH!, ProductController.update);
 apiRouter.get(process.env.GET_PRODUCT_PATH!, ProductController.getById);
 apiRouter.delete(process.env.DELETE_PRODUCT_PATH!, ProductController.delete);
+
+// API TRANSACTION STOCK ADJUSTMENT ROUTE //
+apiRouter.get(process.env.GET_ALL_STOCKADJUSTMENT_PATH!, StockAdjustmentController.get);
+apiRouter.post(process.env.CREATE_STOCKADJUSTMENT_PATH!, StockAdjustmentController.create);
+apiRouter.patch(process.env.UPDATE_STOCKADJUSTMENT_PATH!, StockAdjustmentController.update);
+apiRouter.get(process.env.GET_STOCKADJUSTMENT_PATH!, StockAdjustmentController.getByNumber);
+apiRouter.delete(process.env.DELETE_STOCKADJUSTMENT_PATH!, StockAdjustmentController.delete);
+
+// API TRANSACTION STOCK ADJUSTMENT DETAIL ROUTE //
+apiRouter.get(process.env.GET_ALL_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.get);
+apiRouter.post(process.env.CREATE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.create);
+apiRouter.patch(process.env.UPDATE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.update);
+apiRouter.delete(process.env.DELETE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.delete);

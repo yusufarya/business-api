@@ -8,7 +8,8 @@ export const errorMiddleware = async (error: Error, req: Request, res: Response,
   if (error instanceof ZodError) {
     logger.info(" =========================== Zod Error 400 ===========================");
     res.status(400).json({
-      errors: `Validation Error : ${JSON.stringify(error)}`,
+      // errors: `Validation Error : ${JSON.stringify(error)}`,
+      error
     });
   } else if (error instanceof ResponseError) {
     logger.info("=========================== Response Error " +error.status +"===========================");

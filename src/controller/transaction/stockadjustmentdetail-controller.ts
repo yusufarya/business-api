@@ -58,7 +58,7 @@ export class StockAdjustmentDetailController {
     // get stock adjustment detail by id
     static async delete(req: StockAdjustmentDetailRequest, res: Response, next: NextFunction) {
         try {
-            const response = await StockAdjustmentDetailService.delete(req.body);
+            const response = await StockAdjustmentDetailService.delete(req.body, req.body);
             res.status(200).json({ data: process.env.SUCCESS_DELETE_DATA });
         } catch (error) {
             next(error);

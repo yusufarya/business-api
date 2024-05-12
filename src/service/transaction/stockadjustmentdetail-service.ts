@@ -77,7 +77,7 @@ export class StockAdjustmentDetailService {
             data: SA_DETAIL_PARAMS
         });
 
-        TransactionHelper.stock_SA(headerRequest.type, result.number, result.product_id, result.qty)
+        TransactionHelper.stock_SA(headerRequest.type, result)
         
         return toStockAdjustmentDetailsResponse(result)
     }
@@ -109,12 +109,12 @@ export class StockAdjustmentDetailService {
             data: SA_DETAIL_PARAMS
         });
 
-        TransactionHelper.stock_SA(headerRequest.type, result.number, result.product_id, result.qty)
+        TransactionHelper.stock_SA(headerRequest.type, result)
         
         return toStockAdjustmentDetailsResponse(result)
     }
 
-    static async delete(request: ByIdRequest): Promise<StockAdjustmentDetailsResponse> {
+    static async delete(request: ByIdRequest, headerRequest : CreateStockAdjustmentRequest): Promise<StockAdjustmentDetailsResponse> {
         logger.info("===== Delete stockAdjustmentDetails by id =====")
         logger.info(request.id)
         if(request.id) {
@@ -134,7 +134,7 @@ export class StockAdjustmentDetailService {
                     id: request.id
                 }
             })
-
+            TransactionHelper.delete_stock_SA(headerRequest.type, result)
             return result
     
         } else {

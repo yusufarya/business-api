@@ -3,7 +3,7 @@ import { logger } from "../app/logging";
 import { StockAdjustmentDetailsResponse } from "../model/transaction/stockadjustmentdetail-model";
 
 export class TransactionHelper {
-    static async stock_SA(type: string, dataTransaction: StockAdjustmentDetailsResponse) {
+    static async stock_SA(type: string, dataTransaction: StockAdjustmentDetailsResponse, qty_current_edit: number | undefined = 0) {
         
         const existsProduct = await prismaClient.inventoryStock.findFirst({
             where: {
@@ -28,11 +28,11 @@ export class TransactionHelper {
             
             let stockUpdate = 0
             if(type == 'in') {
-                let qty = dataTransaction.qty
+                let qty = dataTransaction.qty - qty_current_edit
                 let stockCurrent = existsProduct.stock
                 stockUpdate = qty+stockCurrent
             } else if(type == 'out') {
-                let qty = dataTransaction.qty
+                let qty = dataTransaction.qty + qty_current_edit
                 let stockCurrent = existsProduct.stock
                 stockUpdate = stockCurrent-qty
             }

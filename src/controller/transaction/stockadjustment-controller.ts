@@ -48,7 +48,10 @@ export class StockAdjustmentController {
     // get stock adjustment by id
     static async getByNumber(req: StockAdjustmentRequest, res: Response, next: NextFunction) {
         try {
-            const response = await StockAdjustmentService.getByNumber(req.body);
+            // Extract the ID from query parameters
+            const number: string | undefined = req.query.number as string;
+            
+            const response = await StockAdjustmentService.getByNumber({number: number});
             res.status(200).json({ data: response });
         } catch (error) {
             next(error);

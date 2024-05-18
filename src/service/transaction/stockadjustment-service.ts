@@ -125,6 +125,7 @@ export class StockAdjustmentService {
 
     static async getByNumber(request: ByNumberRequest): Promise<StockAdjustmentResponse | null> {
         logger.info("===== Get stockadjustment by number =====")
+        logger.info(request.number)
         if(request.number) {
             const existdata = await prismaClient.stockAdjustment.findUnique({
                 where:{

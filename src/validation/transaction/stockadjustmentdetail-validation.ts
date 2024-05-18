@@ -12,6 +12,7 @@ export class StockAdjustmentDetailValidation {
         })
         .optional(),
         qty: z.number(),
+        qty_current: z.number().optional(),
         product_id: z.number(),
         branch_id: z.number(),
         warehouse_id: z.number(),
@@ -42,6 +43,7 @@ export class StockAdjustmentDetailValidation {
             invalid_type_error: "That's not a date!",
         }).optional(),
         qty: z.number().optional(),
+        qty_current: z.number().optional(),
         product_id: z.number().optional(),
         branch_id: z.number().optional(),
         warehouse_id: z.number().optional(),

@@ -81,6 +81,49 @@ export class StockAdjustmentDetailService {
         
         return toStockAdjustmentDetailsResponse(result)
     }
+
+    static async getById(request: ByIdRequest): Promise<StockAdjustmentDetailsResponse | null> {
+        logger.info("===== Get stock adjustment detail by id =====")
+        logger.info(request.id)
+        if(request.id) {
+            const existdata = await prismaClient.stockAdjustmentDetails.findUnique({
+                where:{
+                    id: request.id
+                },
+                include : {
+                    product: {
+                        select: {
+                            name: true,
+                            unit: {
+                                select: {
+                                    initial: true
+                                }
+                            }
+                        },
+                    },
+                    branch: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    warehouse: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            })
+
+            if(existdata == null) {
+                throw new ResponseError(404, DATA_NOT_FOUND!);
+            }
+
+            return existdata
+    
+        } else {
+            throw new ResponseError(404, DATA_NOT_FOUND!);
+        }
+    }
     
     static async update(request: UpdateStockAdjustmentDetailsRequest, user: User, headerRequest : CreateStockAdjustmentRequest): Promise<StockAdjustmentDetailsResponse> {
         const dataDetailRequest = Validation.validate(StockAdjustmentDetailValidation.UPDATE, request)
@@ -109,7 +152,7 @@ export class StockAdjustmentDetailService {
             data: SA_DETAIL_PARAMS
         });
 
-        TransactionHelper.stock_SA(headerRequest.type, result)
+        TransactionHelper.stock_SA(headerRequest.type, result, dataDetailRequest.qty_current)
         
         return toStockAdjustmentDetailsResponse(result)
     }

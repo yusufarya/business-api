@@ -35,7 +35,20 @@ export class StockAdjustmentDetailController {
     // update stock adjustmentdetail
     static async update(req: StockAdjustmentDetailRequest, res: Response, next: NextFunction) {
         try {
-            const request: UpdateStockAdjustmentDetailsRequest = req.body as UpdateStockAdjustmentDetailsRequest;
+            const qty: string | undefined = req.body.qty as string;
+            const qty_cur: string | undefined = req.body.qty_current as string;
+            
+            // Convert the ID to a number
+            const qty_new: number | undefined = qty ? parseInt(qty) : undefined;
+            const qty_current: number | undefined = qty_cur ? parseInt(qty_cur) : undefined;
+
+            const requestBody = {
+                ...req.body,
+                qty: qty_new,
+                qty_cur: qty_current,
+            }
+
+            const request: UpdateStockAdjustmentDetailsRequest = requestBody as UpdateStockAdjustmentDetailsRequest;
             const response = await StockAdjustmentDetailService.update(request, req.body, req.body);
             res.status(200).json({ 
                 data: process.env.SUCCESS_UPDATE_DATA
@@ -45,15 +58,24 @@ export class StockAdjustmentDetailController {
         }
     }
 
-    // // get stock adjustment detail by id
-    // static async getById(req: StockAdjustmentDetailRequest, res: Response, next: NextFunction) {
-    //     try {
-    //         const response = await StockAdjustmentDetailService.getByNumber(req.body);
-    //         res.status(200).json({ data: response });
-    //     } catch (error) {
-    //         next(error);
-    //     }
-    // }
+    // get stock adjustment detail by id
+    static async getById(req: StockAdjustmentDetailRequest, res: Response, next: NextFunction) {
+        try {
+            // Extract the ID from query parameters
+            const id: string | undefined = req.query.id as string;
+            
+            // Convert the ID to a number
+            const numericId: number | undefined = id ? parseInt(id) : undefined;
+            if(numericId != undefined) {
+                const response = await StockAdjustmentDetailService.getById({id: numericId});
+                res.status(200).json({ data: response });
+            } else {
+                throw new Error('ID not provided');
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
     
     // get stock adjustment detail by id
     static async delete(req: StockAdjustmentDetailRequest, res: Response, next: NextFunction) {

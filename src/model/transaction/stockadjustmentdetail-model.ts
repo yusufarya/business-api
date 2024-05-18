@@ -34,6 +34,7 @@ export type UpdateStockAdjustmentDetailsRequest = {
     sequence?: number,
     date?: Date;
     qty?: number,
+    qty_current?: number,
     product_id?: number,
     branch_id?: number,
     warehouse_id?: number,

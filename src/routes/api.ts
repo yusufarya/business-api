@@ -71,4 +71,5 @@ apiRouter.delete(process.env.DELETE_STOCKADJUSTMENT_PATH!, StockAdjustmentContro
 apiRouter.get(process.env.GET_ALL_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.get);
 apiRouter.post(process.env.CREATE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.create);
 apiRouter.patch(process.env.UPDATE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.update);
+apiRouter.get(process.env.GET_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.getById);
 apiRouter.delete(process.env.DELETE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.delete);

@@ -53,7 +53,7 @@ export class StockAdjustmentService {
         logger.info("===== Store Stockadjustment Data =====")
 
         logger.info("NUMBER TRANSACTION = "+ noTransaction)
-        
+        logger.info(request)
         const stockadjustmentRequest = Validation.validate(StockAdjustmentValidation.STORE, request)
         
         const SA_PARAMS = {

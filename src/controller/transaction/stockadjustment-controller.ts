@@ -3,6 +3,7 @@ import { StockAdjustmentService } from "../../service/transaction/stockadjustmen
 import { logger } from "../../app/logging";
 import { CreateStockAdjustmentRequest, UpdateStockAdjustmentRequest } from "../../model/transaction/stockadjustment-model";
 import { StockAdjustmentRequest } from "../../types/type-request";
+import { ResponseError } from "../../error/response-error";
 
 export class StockAdjustmentController {
 
@@ -22,11 +23,25 @@ export class StockAdjustmentController {
     // create stock adjustment
     static async create(req: Request, res: Response, next: NextFunction) {
         try {
-            const request: CreateStockAdjustmentRequest = req.body as CreateStockAdjustmentRequest;
-            const response = await StockAdjustmentService.store(request, req.body);
-            res.status(200).json({
-                data: response
-            })
+            const branch_id: string | undefined = req.body.branch_id as string;
+            
+            // Convert the ID to a number
+            const branchId: number | undefined = branch_id ? parseInt(branch_id) : undefined;
+            logger.info('=============== CREATE ================')
+            logger.info(branch_id)
+            const requestTRSA = {
+                ...req.body,
+                branch_id: branchId
+            }
+            if(branch_id != undefined) {
+                const request: CreateStockAdjustmentRequest = requestTRSA as CreateStockAdjustmentRequest;
+                const response = await StockAdjustmentService.store(request, req.body);
+                res.status(200).json({
+                    data: response
+                })
+            } else {
+                throw new ResponseError(400, 'Branch id is invalid')
+            }
         } catch (error) {
             next(error)
         }
@@ -36,7 +51,12 @@ export class StockAdjustmentController {
     static async update(req: StockAdjustmentRequest, res: Response, next: NextFunction) {
         try {
             const request: UpdateStockAdjustmentRequest = req.body as UpdateStockAdjustmentRequest;
-            const response = await StockAdjustmentService.update(request, req.body);
+            const branch_id: number | undefined = request.branch_id as number;
+            const requestTRSA = {
+                ...request,
+                branch_id: branch_id
+            }
+            const response = await StockAdjustmentService.update(requestTRSA, req.body);
             res.status(200).json({ 
                 data: process.env.SUCCESS_UPDATE_DATA
             });

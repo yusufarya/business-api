@@ -1,4 +1,4 @@
-import { Branch, Brand, Category, Unit, User } from "@prisma/client";
+import { Branch, Brand, Category, Product, StockAdjustment, StockAdjustmentDetails, Unit, User, Warehouse } from "@prisma/client";
 import { Request } from "express";
 
 export interface UserRequest extends Request {
@@ -17,14 +17,14 @@ export interface BranchRequest extends Request {
   branch?: Branch;
 }
 export interface WarehouseRequest extends Request {
-  warehouse?: WarehouseRequest;
+  warehouse?: Warehouse;
 }
 export interface ProductRequest extends Request {
-  product?: ProductRequest;
+  product?: Product;
 }
 export interface StockAdjustmentRequest extends Request {
-  stockAdjustment?: StockAdjustmentRequest;
+  stockAdjustment?: StockAdjustment;
 }
 export interface StockAdjustmentDetailRequest extends Request {
-  stockAdjustmentDetail?: StockAdjustmentDetailRequest;
+  stockAdjustmentDetail?: StockAdjustmentDetails;
 }

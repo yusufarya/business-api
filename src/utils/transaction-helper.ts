@@ -19,6 +19,7 @@ export class TransactionHelper {
                     product_id: dataTransaction.product_id,
                     branch_id: dataTransaction.branch_id,
                     warehouse_id: dataTransaction.warehouse_id,
+                    debit: dataTransaction.qty,
                     stock: dataTransaction.qty,
                 }
             })
@@ -31,25 +32,39 @@ export class TransactionHelper {
                 let qty = dataTransaction.qty - qty_current_edit
                 let stockCurrent = existsProduct.stock
                 stockUpdate = qty+stockCurrent
+                let UpdateStockProduct = await prismaClient.inventoryStock.update({
+                    where: {
+                        id: existsProduct.id,
+                        product_id: dataTransaction.product_id,
+                        warehouse_id: dataTransaction.warehouse_id,
+                        branch_id: dataTransaction.branch_id
+                    },
+                    data: {
+                        debit: qty,
+                        stock: stockUpdate,
+                    }
+                })
+                logger.info("Update Stock Product (IN) : ")
+                logger.info(UpdateStockProduct)
             } else if(type == 'out') {
                 let qty = dataTransaction.qty + qty_current_edit
                 let stockCurrent = existsProduct.stock
                 stockUpdate = stockCurrent-qty
+                let UpdateStockProduct = await prismaClient.inventoryStock.update({
+                    where: {
+                        id: existsProduct.id,
+                        product_id: dataTransaction.product_id,
+                        warehouse_id: dataTransaction.warehouse_id,
+                        branch_id: dataTransaction.branch_id
+                    },
+                    data: {
+                        credit: qty,
+                        stock: stockUpdate,
+                    }
+                })
+                logger.info("Update Stock Product (OUT) : ")
+                logger.info(UpdateStockProduct)
             }
-
-            const UpdateStockProduct = await prismaClient.inventoryStock.update({
-                where: {
-                    id: existsProduct.id,
-                    product_id: dataTransaction.product_id,
-                    warehouse_id: dataTransaction.warehouse_id,
-                    branch_id: dataTransaction.branch_id
-                },
-                data: {
-                    stock: stockUpdate,
-                }
-            })
-            logger.info("Update Stock Product : ")
-            logger.info(UpdateStockProduct)
         }
     }
 

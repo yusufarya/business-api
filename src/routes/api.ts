@@ -9,6 +9,8 @@ import { WarehouseController } from "../controller/master/warehouse-controller"
 import { ProductController } from "../controller/master/product-controller"
 import { StockAdjustmentController } from "../controller/transaction/stockadjustment-controller"
 import { StockAdjustmentDetailController } from "../controller/transaction/stockadjustmentdetail-controller"
+import { UploadImage } from "../middleware/upload-image"
+
 export const apiRouter = express.Router()
 
 apiRouter.use(authMiddleware)
@@ -39,6 +41,13 @@ apiRouter.patch(process.env.UPDATE_BRAND_PATH!, BrandController.update);
 apiRouter.get(process.env.GET_BRAND_PATH!, BrandController.getById);
 apiRouter.delete(process.env.DELETE_BRAND_PATH!, BrandController.delete);
 
+apiRouter.get(process.env.GET_ALL_PRODUCT_PATH!, ProductController.get);
+apiRouter.post(process.env.CREATE_PRODUCT_PATH!, ProductController.create);
+apiRouter.post(process.env.UPLOAD_IMG_PRODUCT_PATH!, UploadImage.uploadSingleProduct(), ProductController.upload);
+apiRouter.patch(process.env.UPDATE_PRODUCT_PATH!, ProductController.update);
+apiRouter.get(process.env.GET_PRODUCT_PATH!, ProductController.getById);
+apiRouter.delete(process.env.DELETE_PRODUCT_PATH!, ProductController.delete);
+
 // API MASTER BRANCH ROUTE //
 apiRouter.get(process.env.GET_ALL_BRANCH_PATH!, BranchController.get);
 apiRouter.post(process.env.CREATE_BRANCH_PATH!, BranchController.create);
@@ -52,13 +61,6 @@ apiRouter.post(process.env.CREATE_WAREHOUSE_PATH!, WarehouseController.create);
 apiRouter.patch(process.env.UPDATE_WAREHOUSE_PATH!, WarehouseController.update);
 apiRouter.get(process.env.GET_WAREHOUSE_PATH!, WarehouseController.getById);
 apiRouter.delete(process.env.DELETE_WAREHOUSE_PATH!, WarehouseController.delete);
-
-// API MASTER PRODUCTS ROUTE //
-apiRouter.get(process.env.GET_ALL_PRODUCT_PATH!, ProductController.get);
-apiRouter.post(process.env.CREATE_PRODUCT_PATH!, ProductController.create);
-apiRouter.patch(process.env.UPDATE_PRODUCT_PATH!, ProductController.update);
-apiRouter.get(process.env.GET_PRODUCT_PATH!, ProductController.getById);
-apiRouter.delete(process.env.DELETE_PRODUCT_PATH!, ProductController.delete);
 
 // API TRANSACTION STOCK ADJUSTMENT ROUTE //
 apiRouter.get(process.env.GET_ALL_STOCKADJUSTMENT_PATH!, StockAdjustmentController.get);

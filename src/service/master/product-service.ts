@@ -1,12 +1,14 @@
 import env from "dotenv";
 import { Product, User } from "@prisma/client";
-import { CreateProductRequest, ByIdRequest, ProductResponse, UpdateProductRequest, toProductResponse } from "../../model/master/product-model";
+import { CreateProductRequest, ByIdRequest, ProductResponse, UpdateProductRequest, toProductResponse, UploadImageRequest } from "../../model/master/product-model";
 import { prismaClient } from "../../app/database";
 import { Validation } from "../../validation/master/validation";
 import { ProductValidation } from "../../validation/master/product-validation";
 import { logger } from "../../app/logging";
 import { ResponseError } from "../../error/response-error";
 import { Helper } from "../../utils/helper";
+import path from "path";
+import { unlink } from "fs";
 
 env.config();
 
@@ -53,12 +55,15 @@ export class ProductService {
         // if(existName > 0) {
         //     throw new ResponseError(400, "Product name already exists");
         // }
-
-        productRequest.created_at = Helper.dateTimeLocal(new Date());
-        productRequest.created_by = user.username;
+        
+        const paramsProduct = {
+            ...productRequest, // Copy other fields from the original request
+            created_at : Helper.dateTimeLocal(new Date()),
+            created_by : user.username,
+        };
         
         const result = await prismaClient.product.create({ 
-            data: productRequest
+            data: paramsProduct
         });
 
         return toProductResponse(result)
@@ -111,6 +116,32 @@ export class ProductService {
         });
 
         return toProductResponse(result)
+    }
+
+    static async upload(req: UploadImageRequest): Promise<String> {
+        logger.info("===== Upload image product =====")
+        const oldImg = req.body.old_image;
+        if (!req.file) {
+            throw new ResponseError(400, "No file uploaded")
+        }
+
+        const dir = process.env.NODE_ENV === 'production'
+            ? path.join(__dirname, "../../dist/public/images/product")
+            : path.join(__dirname, "../../src/public/images/product");
+        const newImagePath = path.join("/src/public/images/product", req.file.filename);
+
+        if (oldImg) {
+            const oldImagePath = path.join(dir, oldImg);
+            logger.info("====== UNLINK IMAGE OLD IF EXISTS ======")
+            logger.info(oldImagePath)
+            unlink(oldImagePath, (err) => {
+                if (err) {
+                logger.error(`Failed to delete old image: ${err.message}`);
+                }
+            });
+        }
+
+        return newImagePath;
     }
 
     static async getById(request: ByIdRequest): Promise<ProductResponse | null> {

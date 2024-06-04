@@ -9,6 +9,7 @@ import { ResponseError } from "../../error/response-error";
 import { Helper } from "../../utils/helper";
 import path from "path";
 import { unlink } from "fs";
+import { UnitService } from "./unit-service";
 
 env.config();
 
@@ -66,7 +67,38 @@ export class ProductService {
             data: paramsProduct
         });
 
-        return toProductResponse(result)
+        if(result) {
+            const getResponse = toProductResponse(result)
+            logger.info(" ================ =================== ================ ")
+            logger.info(" ================ getResponse product ================ ")
+            logger.info(getResponse)
+            
+            const getInitial = await UnitService.getById({id: getResponse.unit_id})
+            logger.info(" ================ getInitial product ================")
+            logger.info(getInitial?.initial)
+            try {
+                const conversionUnits = await prismaClient.conversionUnit.create({
+                    data: {
+                        product_id: result.id,
+                        unit: getInitial!.initial,
+                        conversion_unit: getInitial!.initial,
+                        qty: 1,
+                        conversion_qty: 1,
+                        purchase_price: getResponse!.purchase_price,
+                        selling_price: getResponse!.selling_price,
+                        created_at : Helper.dateTimeLocal(new Date()),
+                        created_by : user.username,
+                    }
+                })
+            } catch (error) {
+                logger.error("error insert data conversion units")
+                logger.error(error)
+                throw new ResponseError(400, 'Failed to inserting data conversion units')
+            }
+            return getResponse
+        } else {
+            throw new ResponseError(400, 'An error occurred while inserting data conversion units in product')
+        }
     }
 
     static async update(request: UpdateProductRequest, user: User): Promise<ProductResponse> {

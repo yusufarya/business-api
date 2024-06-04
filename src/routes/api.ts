@@ -10,6 +10,8 @@ import { ProductController } from "../controller/master/product-controller"
 import { StockAdjustmentController } from "../controller/transaction/stockadjustment-controller"
 import { StockAdjustmentDetailController } from "../controller/transaction/stockadjustmentdetail-controller"
 import { UploadImage } from "../middleware/upload-image"
+import { ConversionUnitController } from "../controller/master/conversion-unit-controller"
+
 
 export const apiRouter = express.Router()
 
@@ -33,6 +35,14 @@ apiRouter.post(process.env.CREATE_UNIT_PATH!, UnitController.create);
 apiRouter.patch(process.env.UPDATE_UNIT_PATH!, UnitController.update);
 apiRouter.get(process.env.GET_UNIT_PATH!, UnitController.getById);
 apiRouter.delete(process.env.DELETE_UNIT_PATH!, UnitController.delete);
+
+// API MASTER CONVERSION UNITS ROUTE //
+apiRouter.get(process.env.GET_ALL_CONVERSION_UNIT_PATH!, ConversionUnitController.get);
+apiRouter.post(process.env.CREATE_CONVERSION_UNIT_PATH!, ConversionUnitController.create);
+apiRouter.patch(process.env.UPDATE_CONVERSION_UNIT_PATH!, ConversionUnitController.update);
+apiRouter.get(process.env.GET_CONVERSION_UNIT_PATH!, ConversionUnitController.getById);
+apiRouter.get(process.env.GET_BY_PRODUCT_CONVERSION_UNIT_PATH!, ConversionUnitController.getByProduct);
+apiRouter.delete(process.env.DELETE_CONVERSION_UNIT_PATH!, ConversionUnitController.delete);
 
 // API MASTER BRANDS ROUTE //
 apiRouter.get(process.env.GET_ALL_BRAND_PATH!, BrandController.get);

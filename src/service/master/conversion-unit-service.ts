@@ -30,19 +30,36 @@ export class ConversionUnitService {
         const conversionUnitRequest = Validation.validate(ConversionUnitValidation.STORE, request)
 
         logger.info("===== Store conversion unit data =====")
+
+        // Fetch the highest sequence for the given product_id
+        const conversionExists = await prismaClient.conversionUnit.findFirst({
+            where: { 
+                product_id: conversionUnitRequest.product_id
+            },
+            orderBy: { sequence: 'desc' },
+            select: {
+                sequence: true,
+                conversion_unit: true
+            }
+        });
+
+        const newSequence = (conversionExists?.sequence ?? 0) + 1;
+        const unit = conversionExists!.conversion_unit;
         
+        conversionUnitRequest.unit = unit;
+        conversionUnitRequest.sequence = newSequence;
         conversionUnitRequest.created_at = Helper.dateTimeLocal(new Date());
         conversionUnitRequest.created_by = user.username;
 
-        const getProductConversion = await prismaClient.conversionUnit.findFirst({
-            where: {
-                conversion_unit : conversionUnitRequest.unit
-            }
-        })
+        // const getProductConversion = await prismaClient.conversionUnit.findFirst({
+        //     where: {
+        //         conversion_unit : conversionUnitRequest.unit
+        //     }
+        // })
 
-        if(getProductConversion) {
-            throw new ResponseError(404, "Failed, " + DATA_ALREADY_EXISTS!)
-        }
+        // if(getProductConversion) {
+        //     throw new ResponseError(404, "Failed, " + DATA_ALREADY_EXISTS!)
+        // }
         
         const result = await prismaClient.conversionUnit.create({ 
             data: conversionUnitRequest 
@@ -102,18 +119,18 @@ export class ConversionUnitService {
             }
         }
 
-        const unit = {
+        const conversionUnit = {
             ...updateRequest, // Copy other fields from the original request
             updated_at : Helper.dateTimeLocal(new Date()),
             updated_by : user.username,
         };
-        logger.info('==== param unit update ====')
-        logger.info(unit)
+        logger.info('==== Param Conversion Unit update ====')
+        logger.info(conversionUnit)
         const result = await prismaClient.conversionUnit.update({ 
             where: {
                 id: updateRequest.id
             },
-            data: unit
+            data: conversionUnit
         });
 
         return toConversionUnitResponse(result)

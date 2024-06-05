@@ -19,6 +19,7 @@ export type ConversionUnitResponse = {
 
 export type CreateConversionUnitRequest = {
     product_id: number,
+    sequence: number,
     unit: string,
     conversion_unit: string,
     qty: number,

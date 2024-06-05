@@ -229,12 +229,39 @@ export class ProductService {
                 throw new ResponseError(404, DATA_NOT_FOUND!);
             }
 
+            const inventoryStock = await prismaClient.inventoryStock.count({
+                where: {
+                    product_id: request.id
+                }
+            })
+
+            if(inventoryStock > 0) {
+                throw new ResponseError(400, "Product are in Inventory Stock.")
+            }
+            
+            const conversionUnits = await prismaClient.conversionUnit.findMany({
+                where: {
+                    product_id: request.id
+                }
+            })
+
+            logger.info(" ====== List Conversion Units ====== ")
+            logger.info(conversionUnits)
+
+            conversionUnits.map(async(item) => {
+                await prismaClient.conversionUnit.delete({
+                    where:{
+                        id: item.id
+                    }
+                })
+            })
+
             const result = await prismaClient.product.delete({
                 where:{
                     id: request.id
                 }
             })
-
+            
             return result
     
         } else {

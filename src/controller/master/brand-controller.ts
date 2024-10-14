@@ -25,7 +25,8 @@ export class BrandController {
             const request: CreateBrandRequest = req.body as CreateBrandRequest;
             const response = await BrandService.store(request, req.body);
             res.status(200).json({
-                data: process.env.SUCCESS_ADD_DATA
+                message: process.env.SUCCESS_ADD_DATA,
+                data: response
             })
         } catch (error) {
             next(error)
@@ -37,8 +38,9 @@ export class BrandController {
         try {
             const request: UpdateBrandRequest = req.body as UpdateBrandRequest;
             const response = await BrandService.update(request, req.body);
-            res.status(200).json({ 
-                data: process.env.SUCCESS_UPDATE_DATA
+            res.status(200).json({
+                message: process.env.SUCCESS_UPDATE_DATA,
+                data: response
             });
         } catch (error) {
             next(error);

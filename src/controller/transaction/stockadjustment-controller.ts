@@ -36,7 +36,9 @@ export class StockAdjustmentController {
             if(branch_id != undefined) {
                 const request: CreateStockAdjustmentRequest = requestTRSA as CreateStockAdjustmentRequest;
                 const response = await StockAdjustmentService.store(request, req.body);
+                
                 res.status(200).json({
+                    message: process.env.SUCCESS_ADD_DATA,
                     data: response
                 })
             } else {
@@ -57,8 +59,9 @@ export class StockAdjustmentController {
                 branch_id: branch_id
             }
             const response = await StockAdjustmentService.update(requestTRSA, req.body);
-            res.status(200).json({ 
-                data: process.env.SUCCESS_UPDATE_DATA
+            res.status(200).json({
+                message: process.env.SUCCESS_UPDATE_DATA,
+                data: response
             });
         } catch (error) {
             next(error);

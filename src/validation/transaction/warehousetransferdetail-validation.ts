@@ -1,6 +1,6 @@
 import { z, ZodType } from "zod";
 
-export class StockAdjustmentDetailValidation {
+export class WarehouseTransferDetailValidation {
     
     static readonly STORE: ZodType = z.object({
         number: z.string(),
@@ -12,10 +12,8 @@ export class StockAdjustmentDetailValidation {
         })
         .optional(),
         qty: z.number(),
-        // qty_current: z.number().optional(),
         product_id: z.number(),
         branch_id: z.number(),
-        warehouse_id: z.number(),
         description: z.string().min(3).max(200).optional(),
         created_at: z
         .date({
@@ -43,10 +41,8 @@ export class StockAdjustmentDetailValidation {
             invalid_type_error: "That's not a date!",
         }).optional(),
         qty: z.number().optional(),
-        // qty_current: z.number().optional(),
         product_id: z.number().optional(),
         branch_id: z.number().optional(),
-        warehouse_id: z.number().optional(),
         description: z.string().min(3).max(200).optional(),
         created_at: z
         .date({

@@ -1,12 +1,14 @@
 import env from "dotenv";
 import { Category, User } from "@prisma/client";
-import { CreateCategoryRequest, ByIdRequest, CategoryResponse, UpdateCategoryRequest, toCategoryResponse } from "../../model/master/category-model";
+import { CreateCategoryRequest, ByIdRequest, CategoryResponse, UpdateCategoryRequest, toCategoryResponse, UploadImageRequest } from "../../model/master/category-model";
 import { prismaClient } from "../../app/database";
 import { Validation } from "../../validation/master/validation";
 import { CategoryValidation } from "../../validation/master/category-validation";
 import { logger } from "../../app/logging";
 import { ResponseError } from "../../error/response-error";
 import { Helper } from "../../utils/helper";
+import path from "path";
+import { unlink } from "fs";
 
 env.config();
 
@@ -89,6 +91,32 @@ export class CategoryService {
         });
 
         return toCategoryResponse(result)
+    }
+
+    static async upload(req: UploadImageRequest): Promise<String> {
+        logger.info("===== Upload image category =====")
+        const oldImg = req.body.old_image;
+        if (!req.file) {
+            throw new ResponseError(400, "No file uploaded")
+        }
+
+        const dir = process.env.NODE_ENV === 'production'
+            ? path.join(__dirname, "../../dist/public/images/category")
+            : path.join(__dirname, "../../src/public/images/category");
+        const newImagePath = path.join("/category", req.file.filename);
+
+        if (oldImg) {
+            const oldImagePath = path.join(dir, oldImg);
+            logger.info("====== UNLINK IMAGE OLD IF EXISTS ======")
+            logger.info(oldImagePath)
+            unlink(oldImagePath, (err) => {
+                if (err) {
+                    logger.error(`Failed to delete old image: ${err.message}`);
+                }
+            });
+        }
+
+        return newImagePath;
     }
 
     static async getById(request: ByIdRequest): Promise<CategoryResponse | null> {

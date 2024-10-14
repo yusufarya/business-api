@@ -14,7 +14,7 @@ export class StockAdjustmentValidation {
         type: z.enum(typeAdjust),
         total_qty: z.number().optional(),
         branch_id: z.number(),
-        description: z.string().min(3).max(200).optional(),
+        description: z.string().max(200).optional(),
         created_at: z
         .date({
             required_error: "Please select a date and time",
@@ -41,7 +41,7 @@ export class StockAdjustmentValidation {
         type: z.enum(typeAdjust).optional(),
         total_qty: z.number().optional(),
         branch_id: z.number().optional(),
-        description: z.string().min(3).max(200).optional(),
+        description: z.string().max(200).optional(),
         created_at: z
         .date({
             required_error: "Please select a date and time",

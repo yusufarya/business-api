@@ -25,7 +25,8 @@ export class CategoryController {
             const request: CreateCategoryRequest = req.body as CreateCategoryRequest;
             const response = await CategoryService.store(request, req.body);
             res.status(200).json({
-                data: process.env.SUCCESS_ADD_DATA
+                message: process.env.SUCCESS_ADD_DATA,
+                data: response
             })
         } catch (error) {
             next(error)
@@ -37,8 +38,21 @@ export class CategoryController {
         try {
             const request: UpdateCategoryRequest = req.body as UpdateCategoryRequest;
             const response = await CategoryService.update(request, req.body);
+            res.status(200).json({
+                message: process.env.SUCCESS_UPDATE_DATA,
+                data: response
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async upload(req: Request, res: Response, next: NextFunction) {
+        logger.info("===== Controller Upload image category =====")
+        try {
+            const response = await CategoryService.upload(req);
             res.status(200).json({ 
-                data: process.env.SUCCESS_UPDATE_DATA
+                data: {message: 'Upload success', data : response}
             });
         } catch (error) {
             next(error);

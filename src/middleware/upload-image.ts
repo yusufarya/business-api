@@ -5,14 +5,14 @@ import path from 'path';
 import fs from 'fs';
 
 export class UploadImage {
-    static uploadSingleProduct() {
+    static uploadSingleImage(destinationPath : String) {
         const storage = multer.diskStorage({
             destination: async (req, file, cb) => {
                 let dir;
                 if (process.env.NODE_ENV === 'production') {
-                    dir = path.join(__dirname, "../../dist/public/images/product");
+                    dir = path.join(__dirname, "../../dist/public/images/"+destinationPath);
                 } else {
-                    dir = path.join(__dirname, "../../src/public/images/product");
+                    dir = path.join(__dirname, "../../src/public/images/"+destinationPath);
                 }
                 // Ensure directory exists
                 await fs.promises.mkdir(dir, { recursive: true });

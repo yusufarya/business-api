@@ -25,7 +25,8 @@ export class UnitController {
             const request: CreateUnitRequest = req.body as CreateUnitRequest;
             const response = await UnitService.store(request, req.body);
             res.status(200).json({
-                data: process.env.SUCCESS_ADD_DATA
+                message: process.env.SUCCESS_ADD_DATA,
+                data: response
             })
         } catch (error) {
             next(error)
@@ -37,8 +38,9 @@ export class UnitController {
         try {
             const request: UpdateUnitRequest = req.body as UpdateUnitRequest;
             const response = await UnitService.update(request, req.body);
-            res.status(200).json({ 
-                data: process.env.SUCCESS_UPDATE_DATA
+            res.status(200).json({
+                message: process.env.SUCCESS_UPDATE_DATA,
+                data: response
             });
         } catch (error) {
             next(error);

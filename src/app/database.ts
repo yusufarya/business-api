@@ -22,27 +22,48 @@ export const prismaClient = new PrismaClient({
   ],
 });
 
-prismaClient.$on("error", (e) => {
+type PrismaLogEvent = {
+  timestamp: Date;
+  target: string;
+  message: string;
+};
+
+type PrismaQueryEvent = {
+  timestamp: Date;
+  query: string;
+  params: string;
+  duration: number;
+  target: string;
+};
+
+prismaClient.$on("error", (e: PrismaLogEvent) => {
   logger.info(
-    "=========================== PRISMA ERROR ==========================="
+    "LOGGER PRISMA ERROR => "
   );
   logger.error(e);
 });
-prismaClient.$on("warn", (e) => {
+
+prismaClient.$on("warn", (e: PrismaLogEvent) => {
   logger.info(
-    "=========================== PRISMA WARN ==========================="
+    "LOGGER PRISMA WARN => "
   );
   logger.warn(e);
 });
-prismaClient.$on("info", (e) => {
+
+prismaClient.$on("info", (e: PrismaLogEvent) => {
   logger.info(
-    "=========================== PRISMA INFO ==========================="
+    "LOGGER PRISMA INFO => "
   );
   logger.info(e);
 });
-prismaClient.$on("query", (e) => {
+
+prismaClient.$on("query", (e: PrismaQueryEvent) => {
   logger.info(
-    "=========================== PRISMA QUERY ==========================="
+    "LOGGER PRISMA QUERY => "
   );
-  logger.info(e);
+  logger.info({
+    query: e.query,
+    params: e.params,
+    duration: e.duration,
+  });
 });

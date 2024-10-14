@@ -7,10 +7,13 @@ import { BrandController } from "../controller/master/brand-controller"
 import { BranchController } from "../controller/master/branch-controller"
 import { WarehouseController } from "../controller/master/warehouse-controller"
 import { ProductController } from "../controller/master/product-controller"
+import { ConversionUnitController } from "../controller/master/conversion-unit-controller"
+import { UploadImage } from "../middleware/upload-image"
 import { StockAdjustmentController } from "../controller/transaction/stockadjustment-controller"
 import { StockAdjustmentDetailController } from "../controller/transaction/stockadjustmentdetail-controller"
-import { UploadImage } from "../middleware/upload-image"
-import { ConversionUnitController } from "../controller/master/conversion-unit-controller"
+import { WarehouseTransferController } from "../controller/transaction/warehousetransfer-controller"
+import { WarehouseTransferDetailController } from "../controller/transaction/warehousetransferdetail-controller"
+import { PosController } from "../controller/transaction/pos-controller"
 
 
 export const apiRouter = express.Router()
@@ -24,6 +27,7 @@ apiRouter.delete(process.env.LOGOUT_USER_PATH!, UserControler.logout);
 
 // API MASTER CATEGORIES ROUTE //
 apiRouter.get(process.env.GET_ALL_CATEGORY_PATH!, CategoryController.get);
+apiRouter.post(process.env.UPLOAD_IMG_CATEGORY_PATH!, UploadImage.uploadSingleImage('category'), CategoryController.upload);
 apiRouter.post(process.env.CREATE_CATEGORY_PATH!, CategoryController.create);
 apiRouter.patch(process.env.UPDATE_CATEGORY_PATH!, CategoryController.update);
 apiRouter.get(process.env.GET_CATEGORY_PATH!, CategoryController.getById);
@@ -51,11 +55,13 @@ apiRouter.patch(process.env.UPDATE_BRAND_PATH!, BrandController.update);
 apiRouter.get(process.env.GET_BRAND_PATH!, BrandController.getById);
 apiRouter.delete(process.env.DELETE_BRAND_PATH!, BrandController.delete);
 
+// API MASTER PRODUCTS ROUTE //
 apiRouter.get(process.env.GET_ALL_PRODUCT_PATH!, ProductController.get);
+apiRouter.post(process.env.UPLOAD_IMG_PRODUCT_PATH!, UploadImage.uploadSingleImage('product'), ProductController.upload);
 apiRouter.post(process.env.CREATE_PRODUCT_PATH!, ProductController.create);
-apiRouter.post(process.env.UPLOAD_IMG_PRODUCT_PATH!, UploadImage.uploadSingleProduct(), ProductController.upload);
 apiRouter.patch(process.env.UPDATE_PRODUCT_PATH!, ProductController.update);
 apiRouter.get(process.env.GET_PRODUCT_PATH!, ProductController.getById);
+apiRouter.get(process.env.GET_STOCK_PRODUCT_PATH!, ProductController.getStockProduct);
 apiRouter.delete(process.env.DELETE_PRODUCT_PATH!, ProductController.delete);
 
 // API MASTER BRANCH ROUTE //
@@ -85,3 +91,22 @@ apiRouter.post(process.env.CREATE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDe
 apiRouter.patch(process.env.UPDATE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.update);
 apiRouter.get(process.env.GET_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.getById);
 apiRouter.delete(process.env.DELETE_STOCKADJUSTMENTDETAIL_PATH!, StockAdjustmentDetailController.delete);
+
+// API TRANSACTION WAREHOUSE TRANSFER ROUTE //
+apiRouter.get(process.env.GET_ALL_WAREHOUSETRANSFER_PATH!, WarehouseTransferController.get);
+apiRouter.post(process.env.CREATE_WAREHOUSETRANSFER_PATH!, WarehouseTransferController.create);
+apiRouter.patch(process.env.UPDATE_WAREHOUSETRANSFER_PATH!, WarehouseTransferController.update);
+apiRouter.get(process.env.GET_WAREHOUSETRANSFER_PATH!, WarehouseTransferController.getByNumber);
+apiRouter.delete(process.env.DELETE_WAREHOUSETRANSFER_PATH!, WarehouseTransferController.delete);
+
+// API TRANSACTION WAREHOUSE TRANSFER DETAIL ROUTE //
+apiRouter.get(process.env.GET_ALL_WAREHOUSETRANSFERDETAIL_PATH!, WarehouseTransferDetailController.get);
+apiRouter.post(process.env.CREATE_WAREHOUSETRANSFERDETAIL_PATH!, WarehouseTransferDetailController.create);
+apiRouter.patch(process.env.UPDATE_WAREHOUSETRANSFERDETAIL_PATH!, WarehouseTransferDetailController.update);
+apiRouter.get(process.env.GET_WAREHOUSETRANSFERDETAIL_PATH!, WarehouseTransferDetailController.getById);
+apiRouter.delete(process.env.DELETE_WAREHOUSETRANSFERDETAIL_PATH!, WarehouseTransferDetailController.delete);
+
+
+apiRouter.get(process.env.GET_CART_POS!, PosController.get);
+apiRouter.post(process.env.UPDATE_CART_POS!, PosController.update);
+apiRouter.delete(process.env.DELETE_CART_POS!, PosController.delete);

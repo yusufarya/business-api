@@ -1,6 +1,6 @@
 import env from "dotenv";
 import { Product, User } from "@prisma/client";
-import { CreateProductRequest, ByIdRequest, ProductResponse, UpdateProductRequest, toProductResponse, UploadImageRequest } from "../../model/master/product-model";
+import { CreateProductRequest, ByIdRequest, ProductResponse, UpdateProductRequest, toProductResponse, UploadImageRequest, stockRequest } from "../../model/master/product-model";
 import { prismaClient } from "../../app/database";
 import { Validation } from "../../validation/master/validation";
 import { ProductValidation } from "../../validation/master/product-validation";
@@ -10,6 +10,7 @@ import { Helper } from "../../utils/helper";
 import path from "path";
 import { unlink } from "fs";
 import { UnitService } from "./unit-service";
+import { InventoryStockResponse } from "../../model/master/inventory-stock-model";
 
 env.config();
 
@@ -160,7 +161,7 @@ export class ProductService {
         const dir = process.env.NODE_ENV === 'production'
             ? path.join(__dirname, "../../dist/public/images/product")
             : path.join(__dirname, "../../src/public/images/product");
-        const newImagePath = path.join("/src/public/images/product", req.file.filename);
+        const newImagePath = path.join("/product", req.file.filename);
 
         if (oldImg) {
             const oldImagePath = path.join(dir, oldImg);
@@ -198,6 +199,39 @@ export class ProductService {
                     brand:{
                         select: {
                             name : true
+                        }
+                    }
+                }
+            })
+
+            if(existdata == null) {
+                throw new ResponseError(404, DATA_NOT_FOUND!);
+            }
+
+            return existdata
+    
+        } else {
+            throw new ResponseError(404, DATA_NOT_FOUND!);
+        }
+    }
+
+    static async getStockProduct(request: stockRequest): Promise<InventoryStockResponse | null> {
+        logger.info("===== Get product by id =====")
+        if(request.product_id) {
+            const existdata = await prismaClient.inventoryStock.findFirst({
+                where:{
+                    product_id : request.product_id,
+                    branch_id : request.branch_id,
+                    warehouse_id : request.warehouse_id
+                },
+                include: {
+                    product: {
+                        include: {
+                            unit: {
+                                select:{
+                                    initial: true
+                                }
+                            }
                         }
                     }
                 }

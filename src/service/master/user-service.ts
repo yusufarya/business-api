@@ -13,7 +13,6 @@ import { Validation } from "../../validation/master/validation";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 import { logger } from "../../app/logging";
-import { string } from "zod";
 import { User } from "@prisma/client";
 import { Request } from "express";
 import { Helper } from "../../utils/helper";

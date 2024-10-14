@@ -37,7 +37,8 @@ export class WarehouseController {
                 console.log(fixRequest)
                 const response = await WarehouseService.store(fixRequest, req.body);
                 res.status(200).json({
-                    data: process.env.SUCCESS_ADD_DATA
+                    message: process.env.SUCCESS_ADD_DATA,
+                    data: response
                 })
             } else {
                 throw new Error('ID not provided');
@@ -53,7 +54,8 @@ export class WarehouseController {
             const request: UpdateWarehouseRequest = req.body as UpdateWarehouseRequest;
             const response = await WarehouseService.update(request, req.body);
             res.status(200).json({ 
-                data: process.env.SUCCESS_UPDATE_DATA
+                message: process.env.SUCCESS_UPDATE_DATA,
+                data: response
             });
         } catch (error) {
             next(error);

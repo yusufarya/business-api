@@ -2,7 +2,8 @@ import { NextFunction, Request, Response, response } from "express";
 import { ProductService } from "../../service/master/product-service";
 import { logger } from "../../app/logging";
 import { CreateProductRequest, UpdateProductRequest } from "../../model/master/product-model";
-import { ProductRequest } from "../../types/type-request";
+import { InventoryStockRequest, ProductRequest } from "../../types/type-request";
+
 
 export class ProductController {
 
@@ -53,7 +54,8 @@ export class ProductController {
             const request: CreateProductRequest = requestBody as CreateProductRequest;
             const response = await ProductService.store(request, req.body);
             res.status(200).json({
-                data: process.env.SUCCESS_ADD_DATA
+                message: process.env.SUCCESS_ADD_DATA,
+                data: response
             })
         } catch (error) {
             next(error)
@@ -96,8 +98,9 @@ export class ProductController {
 
             const request: UpdateProductRequest = requestBody as UpdateProductRequest;
             const response = await ProductService.update(request, req.body);
-            res.status(200).json({ 
-                data: process.env.SUCCESS_UPDATE_DATA
+            res.status(200).json({
+                message: process.env.SUCCESS_UPDATE_DATA,
+                data: response
             });
         } catch (error) {
             next(error);
@@ -132,6 +135,35 @@ export class ProductController {
             }
         } catch (error) {
             next(error);
+        }
+    }
+
+    static async getStockProduct(req: InventoryStockRequest, res: Response, next: NextFunction) {
+        try {
+            // Extract the ID from query parameters
+            const productId: string | undefined = req.query.product_id as string;
+            const branchId: string | undefined = req.query.branch_id as string;
+            const warehouseId: string | undefined = req.query.warehouse_id as string;
+            
+            // Convert the ID to a number
+            const product_id: number | undefined = productId ? parseInt(productId) : undefined;
+            const branch_id: number | undefined = branchId ? parseInt(branchId) : undefined;
+            const warehouse_id: number | undefined = warehouseId ? parseInt(branchId) : undefined;
+
+            const params = {
+                product_id: product_id,
+                branch_id: branch_id,
+                warehouse_id: warehouse_id
+            }
+            
+            if (product_id !== undefined && branch_id !== undefined && warehouse_id !== undefined) {
+                const response = await ProductService.getStockProduct(params);
+                res.status(200).json({ data: response });
+            } else {
+                throw new Error('ID not provided');
+            }
+        } catch (error) {
+            next(error)
         }
     }
     

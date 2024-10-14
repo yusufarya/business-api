@@ -75,6 +75,12 @@ export type ByIdRequest = {
     id: number
 }
 
+export type stockRequest = {
+    product_id?: number
+    branch_id?: number
+    warehouse_id?: number
+}
+
 export function toProductResponse(product: Product): ProductResponse {
     return {
         id: product.id,

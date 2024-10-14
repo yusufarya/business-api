@@ -3,3 +3,7 @@ node_modules
 .env
 prisma
 dist
+src/public/images/category
+src/public/images/product
+
+package-lock.json

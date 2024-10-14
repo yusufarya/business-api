@@ -1,4 +1,4 @@
-import { Branch, Brand, Category, ConversionUnit, Product, StockAdjustment, StockAdjustmentDetails, Unit, User, Warehouse } from "@prisma/client";
+import { Branch, Brand, Category, ConversionUnit, InventoryStock, POSCart, Product, StockAdjustment, StockAdjustmentDetails, TransactionHistories, Unit, User, Warehouse, WarehouseTransfer, WarehouseTransferDetails } from "@prisma/client";
 import { Request } from "express";
 
 export interface UserRequest extends Request {
@@ -25,9 +25,24 @@ export interface WarehouseRequest extends Request {
 export interface ProductRequest extends Request {
   product?: Product;
 }
+export interface InventoryStockRequest extends Request {
+  inventoryStock?: InventoryStock;
+}
 export interface StockAdjustmentRequest extends Request {
   stockAdjustment?: StockAdjustment;
 }
 export interface StockAdjustmentDetailRequest extends Request {
   stockAdjustmentDetail?: StockAdjustmentDetails;
+}
+export interface WarehouseTransferRequest extends Request {
+  stockAdjustment?: WarehouseTransfer;
+}
+export interface WarehouseTransferDetailRequest extends Request {
+  stockAdjustmentDetail?: WarehouseTransferDetails;
+}
+export interface TransactionHistoriesRequest extends Request {
+  transactionHistories?: TransactionHistories;
+}
+export interface PosCartRequest extends Request {
+  posCart?: POSCart
 }

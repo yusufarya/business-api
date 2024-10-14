@@ -25,7 +25,8 @@ export class BranchController {
             const request: CreateBranchRequest = req.body as CreateBranchRequest;
             const response = await BranchService.store(request, req.body);
             res.status(200).json({
-                data: process.env.SUCCESS_ADD_DATA
+                message: process.env.SUCCESS_ADD_DATA,
+                data: response
             })
         } catch (error) {
             next(error)
@@ -38,7 +39,8 @@ export class BranchController {
             const request: UpdateBranchRequest = req.body as UpdateBranchRequest;
             const response = await BranchService.update(request, req.body);
             res.status(200).json({ 
-                data: process.env.SUCCESS_UPDATE_DATA
+                message: process.env.SUCCESS_UPDATE_DATA,
+                data: response
             });
         } catch (error) {
             next(error);

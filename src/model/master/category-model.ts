@@ -1,4 +1,5 @@
 import { Category } from "@prisma/client";
+import { Request } from "express";
 
 export type CategoryResponse = {
     id: number,
@@ -28,6 +29,13 @@ export type UpdateCategoryRequest = {
     created_by?: string,
     updated_at?: Date,
     updated_by?: string
+}
+
+export interface UploadImageRequest extends Request {
+    file?: Express.Multer.File;
+    body: {
+        old_image?: string;
+    };
 }
 
 export type ByIdRequest = {

@@ -8,11 +8,11 @@ import { logger } from "../../app/logging";
 import { ResponseError } from "../../error/response-error";
 import { Helper } from "../../utils/helper";
 import { ByIdRequest, ByProductRequest, ConversionUnitResponse, CreateConversionUnitRequest, UpdateConversionUnitRequest, toConversionUnitResponse } from "../../model/master/conversion-unit-model";
+import { MasterHelper } from "../../utils/master-helper";
 
 env.config();
 
 const DATA_NOT_FOUND = process.env.DATA_NOT_FOUND;
-const DATA_ALREADY_EXISTS = process.env.DATA_ALREADY_EXISTS;
 
 export class ConversionUnitService {
     static async getAllData(): Promise<ConversionUnit[]> {
@@ -39,66 +39,32 @@ export class ConversionUnitService {
             orderBy: { sequence: 'desc' },
             select: {
                 sequence: true,
-                conversion_unit: true
+                conversion_unit: true,
+                qty: true
             }
         });
+
+        if(!conversionExists) {
+            throw new ResponseError(404, 'Product not found.')
+        }
 
         const newSequence = (conversionExists?.sequence ?? 0) + 1;
         const unit = conversionExists!.conversion_unit;
         
         conversionUnitRequest.unit = unit;
         conversionUnitRequest.sequence = newSequence;
+        conversionUnitRequest.conversion_qty = 1;
         conversionUnitRequest.created_at = Helper.dateTimeLocal(new Date());
         conversionUnitRequest.created_by = user.username;
 
-        // const getProductConversion = await prismaClient.conversionUnit.findFirst({
-        //     where: {
-        //         conversion_unit : conversionUnitRequest.unit
-        //     }
-        // })
-
-        // if(getProductConversion) {
-        //     throw new ResponseError(404, "Failed, " + DATA_ALREADY_EXISTS!)
-        // }
-        
         const result = await prismaClient.conversionUnit.create({ 
             data: conversionUnitRequest 
         });
 
-        if(result) {
-            const getResponse = toConversionUnitResponse(result)
-            logger.info(" ================ ============================ ================ ")
-            logger.info(" ================ getResponse convetsion units ================ ")
-            logger.info(getResponse)
-            
-            try {
-                const GetConversionUnits = await prismaClient.conversionUnit.findFirst({
-                    where: {
-                        conversion_unit: getResponse.unit
-                    }
-                })
-                if(!GetConversionUnits) {
-                    logger.error("conversion units not found")
-                    throw new ResponseError(400, 'Failed to updating data, conversion units not found.')
-                }
-                const conversionUnits = await prismaClient.conversionUnit.update({
-                    where: {
-                        id: GetConversionUnits.id
-                    },
-                    data: {
-                        conversion_qty: getResponse.qty
-                    }
-                })
-            } catch (error) {
-                logger.error("error update data conversion units")
-                logger.error(error)
-                throw new ResponseError(400, 'Failed to updating data conversion units')
-            }
+        const getResponse = toConversionUnitResponse(result)
+        MasterHelper.updateConversionUnit(result, getResponse)
 
-            return getResponse
-        } else {
-            throw new ResponseError(400, 'An error occurred while inserting data Convertion unit')
-        }
+        return getResponse
     }
 
     static async update(request: UpdateConversionUnitRequest, user: User): Promise<ConversionUnitResponse> {
@@ -133,7 +99,11 @@ export class ConversionUnitService {
             data: conversionUnit
         });
 
-        return toConversionUnitResponse(result)
+        const getResponse = toConversionUnitResponse(result)
+        MasterHelper.updateConversionUnit(result, getResponse)
+
+        return getResponse
+
     }
 
     static async getById(request: ByIdRequest): Promise<ConversionUnitResponse | null> {

@@ -22,23 +22,63 @@ export class ConversionUnitController {
     // create unit
     static async create(req: Request, res: Response, next: NextFunction) {
         try {
-            const request: CreateConversionUnitRequest = req.body as CreateConversionUnitRequest;
+            
+            const productId: string | undefined = req.body.product_id as string;
+            const qty: string | undefined = req.body.qty as string;
+            const purchase_price: string | undefined = req.body.purchase_price as string;
+            const selling_price: string | undefined = req.body.selling_price as string;
+            
+            const product_id: number | undefined = productId ? parseInt(productId) : undefined;
+            const quantity: number | undefined = qty ? parseInt(qty) : undefined;
+            const purchasePrice: number | undefined = purchase_price ? parseInt(purchase_price) : undefined;
+            const sellingPrice: number | undefined = selling_price ? parseInt(selling_price) : undefined;
+
+            const requestBody = {
+                ...req.body,
+                product_id: product_id,
+                qty: quantity,
+                purchase_price: purchasePrice,
+                selling_price: sellingPrice,
+            }
+
+            const request: CreateConversionUnitRequest = requestBody as CreateConversionUnitRequest;
             const response = await ConversionUnitService.store(request, req.body);
             res.status(200).json({
-                data: process.env.SUCCESS_ADD_DATA
+                message: process.env.SUCCESS_ADD_DATA,
+                data: response
             })
         } catch (error) {
             next(error)
         }
     }
 
-    // update unit
+    // update conversion unit
     static async update(req: ConversionUnitRequest, res: Response, next: NextFunction) {
         try {
-            const request: UpdateConversionUnitRequest = req.body as UpdateConversionUnitRequest;
+            
+            const productId: string | undefined = req.body.product_id as string;
+            const qty: string | undefined = req.body.qty as string;
+            const purchase_price: string | undefined = req.body.purchase_price as string;
+            const selling_price: string | undefined = req.body.selling_price as string;
+            
+            const product_id: number | undefined = productId ? parseInt(productId) : undefined;
+            const quantity: number | undefined = qty ? parseInt(qty) : undefined;
+            const purchasePrice: number | undefined = purchase_price ? parseInt(purchase_price) : undefined;
+            const sellingPrice: number | undefined = selling_price ? parseInt(selling_price) : undefined;
+
+            const requestBody = {
+                ...req.body,
+                product_id: product_id,
+                qty: quantity,
+                purchase_price: purchasePrice,
+                selling_price: sellingPrice,
+            }
+
+            const request: UpdateConversionUnitRequest = requestBody as UpdateConversionUnitRequest;
             const response = await ConversionUnitService.update(request, req.body);
-            res.status(200).json({ 
-                data: process.env.SUCCESS_UPDATE_DATA
+            res.status(200).json({
+                message: process.env.SUCCESS_UPDATE_DATA,
+                data: response
             });
         } catch (error) {
             next(error);

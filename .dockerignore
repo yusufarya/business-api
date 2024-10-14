@@ -1,2 +1,9 @@
 node_modules
+# Keep environment variables out of version control
+.env
+prisma
 dist
+src/public/images/category
+src/public/images/product
+
+package-lock.json
